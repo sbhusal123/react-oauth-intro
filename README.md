@@ -5,13 +5,20 @@ This repo is an experiment to understand how social sign in works.
 - [Facebook Login](./Facebook%20Login.md)
 - [Google Login](./Google%20Login.md)
 
+**Client side Libraries:**
+
+- [react-oauth/google](https://www.npmjs.com/package/@react-oauth/google)
+
+- [react-facebook-login](https://www.npmjs.com/package/react-facebook-login)
+
 Basically the idea is to:
 
 1. Get the code (authorization code) after user verifies identity in conscent screen.
 2. Code thus obtained is passed to the rest api.
 3. Rest api does following steps:
     3.1. Exchanges the authorization code for access and refresh token by hitting providers token exchange endpoint.
-    3.2. Get the user details from provider's user details api. 
+    3.2. Get the user details from provider's user details endpoint passing access token.
+    3.3. Create / authenticate user.
 
 
 # Providers Endpoint Used:
@@ -22,7 +29,7 @@ Basically the idea is to:
 - [Getting Started with GraphAPI](https://developers.facebook.com/docs/graph-api/get-started/)
 
 
-**1.1. Oauth Conscent Screen:**
+### i. Oauth Conscent Screen:**
 In this phase, client (frontend) is presented with provider's conscent screen. On a callback respose, it receives an authorization code which is decoded, note that the autorization code needs to decoded.
 
 ```js
@@ -49,7 +56,7 @@ In this phase, client (frontend) is presented with provider's conscent screen. O
 // Code thus obtained is the authorization code, which we'll use further.
 ```
 
-**2. Token Endpoint**
+### ii. Token Endpoint
 - This endpoint is used to exchange the authorization code for an access token.
 
 
@@ -76,7 +83,7 @@ Response:
 ```
 
 
-**3. User Detail Endpoint:**
+### iii. User Detail Endpoint:
 
 ```python
         fields = "id,first_name,middle_name,last_name,email,picture"
@@ -115,7 +122,7 @@ https://graph.facebook.com/me?access_token=<access_token>&fields=id%2Cfirst_name
 
 - [Using Oauth2.0](https://developers.google.com/identity/protocols/oauth2)
 
-**1. Oauth Conscent Screen:**
+### i. Oauth Conscent Screen:
 
 In this phase, client (frontend) is presented with provider's conscent screen. On a callback respose, it receives an authorization code which is decoded, note that the autorization code needs to decoded.
 
@@ -130,7 +137,7 @@ In this phase, client (frontend) is presented with provider's conscent screen. O
 }
 ```
 
-**2. Token Endpoint:**
+### ii. Token Endpoint:
 
 We can uset the code, from the step 1 and construct the payload on the backend and send a post request to token url as follows:
 
@@ -160,7 +167,7 @@ token_response = requests.post(GOOGLE_TOKEN_URL, data=token_payload)
 
 This step yields us with, `access_token` and `id_token`, which we can use to fetch the user details.
 
-**Userinfo Endpoint:**
+### iii. Userinfo Endpoint:
 
 ```python
 GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
