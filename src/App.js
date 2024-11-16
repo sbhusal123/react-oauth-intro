@@ -1,21 +1,88 @@
-import logo from './logo.svg';
-import './App.css';
+import { useGoogleLogin } from '@react-oauth/google';
+
+import FacebookLogin from 'react-facebook-login';
+
+import {jwtDecode} from 'jwt-decode'
+
+import { FACEBOOK_APP_ID } from './config'
+
+import AuthService from './services/auth';
 
 function App() {
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      console.log("credentialResponse:: ", credentialResponse);
+
+      // Send the ID token to the Django backend for validation and login:
+      // Note that, the token obtained is only useful for single request
+      const response = await AuthService.googleAuth(credentialResponse.code);
+      console.log('Login/Registration successful:', response.data);
+      // You can now use the response to store the token or update the UI
+
+    } catch (error) {
+      console.error('Login Failed:', error);
+      alert('Login failed. Please try again.');
+    }
+  };
+
+  const handleGoogleLoginError = () => {
+    console.log('Login Failed');
+    alert('Login failed. Please try again.');
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleLoginSuccess,
+    onError: handleGoogleLoginError,
+    flow: 'auth-code'
+  })
+
+  const responseFacebook = async (response) => {
+    if (response.status !== 'unknown') {
+      try {
+        const decode = jwtDecode(response.signedRequest)
+        // Handle login success
+        console.log('Facebook login success::', response);
+  
+        // Send the ID token to the Django backend for validation and login
+        const authResp = await AuthService.facebookAuth(decode.code);
+        console.log('Login/Registration successful:', authResp.data);
+  
+        console.log("Decoded Signed Request::", decode)
+      } catch (error) {
+        console.log("Login error::", error)
+        alert('Login failed. Please try again.');
+      }
+
+    } else {
+      // Handle login failure
+      console.error('Facebook login failed:', response);
+    }
+  };  
+
   return (
     <div className="App">
+      {}
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
         <a
           className="App-link"
           href="https://reactjs.org"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          <button onClick={googleLogin}>
+            Login In Google
+          </button>
+          <br/>
+          <br/>
+          <FacebookLogin
+            appId={FACEBOOK_APP_ID} // Replace with your Facebook App ID
+            autoLoad={false} // Whether to automatically load the login dialog
+            fields=""
+            callback={responseFacebook}
+            icon="fa-facebook"
+            size='small'
+            responseType='code'
+          />
         </a>
       </header>
     </div>
