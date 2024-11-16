@@ -8,9 +8,6 @@
 
 - Add the client id to your project's environment variables.
 
-
-- Install Package: ``yarn add react-oauth/google``
-
 **Initializing Provider**
 
 ```js
