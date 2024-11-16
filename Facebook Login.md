@@ -10,7 +10,7 @@ Get 3 things from your app:
 - Redirect URI
 
 
-We'll be using ``react-facebook-login`` for facebook login. ``yarn add react-facebook-login``
+``react-facebook-login`` to get client side authorization code =>  ``yarn add react-facebook-login``
 
 ```js
   const responseFacebook = async (response) => {

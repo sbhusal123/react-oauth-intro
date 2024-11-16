@@ -4,7 +4,10 @@
 
 ## Frontend Setup:
 
-- Create a Google Client Key and Client ID following a google developer console. [Google Developer Console](https://console.developers.google.com/)
+- Create a Google Client Key and Client ID following a google developer console. [Google Developer Console](https://console.developers.google.com/), Note down:
+  - Client Secret
+  - Client Key / ID
+  - Redirect URL
 
 - Add the client id to your project's environment variables.
 
