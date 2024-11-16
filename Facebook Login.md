@@ -36,7 +36,7 @@ We'll be using ``react-facebook-login`` for facebook login. ``yarn add react-fac
       console.error('Facebook login failed:', response);
     }
   };  
-
+          // Params Description: https://www.npmjs.com/package/react-facebook-login#parameters
           <FacebookLogin
             appId={FACEBOOK_APP_ID} // Replace with your Facebook App ID
             autoLoad={false} // Whether to automatically load the login dialog
@@ -44,10 +44,36 @@ We'll be using ``react-facebook-login`` for facebook login. ``yarn add react-fac
             callback={responseFacebook}
             icon="fa-facebook"
             size='small'
+            scope=""
             // note that the response type should be code here
             responseType='code'
           />
 ```
+Here, the response we get is:
+
+```js
+{
+    "name": "",
+    "id": "",
+    "userID": "",
+    "expiresIn": 5888,
+    "accessToken": "",
+    "signedRequest": "",
+    "graphDomain": "facebook",
+    "data_access_expiration_time": 213123
+}
+
+// To get the token, we'll have to decode the signedRequest which gives us with: jwt_decode(signedRequest)
+{
+    "user_id": "",
+    "code": "",
+    "algorithm": "",
+    "issued_at": 1731763312
+}
+
+// Code thus obtained is the authorization code, which we'll use further.
+```
+
 
 Now, we need to pass the code to the backend. With the code, backend with procede in following way:
 
@@ -55,7 +81,7 @@ Now, we need to pass the code to the backend. With the code, backend with proced
 
 - Step 2: Validate and extract user info from the ID token
 
-- Step 3: Create or Login User
+- Step 3: Create or Login User.
 
 ## 2. Backend Setup:
 

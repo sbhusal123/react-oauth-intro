@@ -20,7 +20,7 @@
     </GoogleOAuthProvider>;
 ```
 
-This allows clientId to be accessed anywhere in the context.
+This allows clientId to be accessed anywhere in the context of application within ``react-oauth/google``.
 
 
 **Login View:**
@@ -53,6 +53,7 @@ function App() {
     alert('Login failed. Please try again.');
   };
 
+  // Params Description: https://www.npmjs.com/package/@react-oauth/google#usegooglelogin-both-implicit--authorization-code-flow
   const googleLogin = useGoogleLogin({
     onSuccess: handleGoogleLoginSuccess,
     onError: handleGoogleLoginError,
@@ -83,6 +84,7 @@ export default App;
 Note the following code:
 
 ```js
+  // Param Description: https://www.npmjs.com/package/@react-oauth/google#usegooglelogin-both-implicit--authorization-code-flow
   const googleLogin = useGoogleLogin({
     onSuccess: handleGoogleLoginSuccess,
     onError: handleGoogleLoginError,
@@ -90,7 +92,7 @@ Note the following code:
   })
 ```
 
-Here, the authentication flow is **auth-code** so, the response on callback url is:
+Here, the authentication flow is **auth-code** so, the response is:
 
 ```json
 {

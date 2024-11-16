@@ -1,0 +1,187 @@
+# React Social Sign In With DRF
+
+This repo is an experiment to understand how social sign in works.
+
+- [Facebook Login](./Facebook%20Login.md)
+- [Google Login](./Google%20Login.md)
+
+Basically the idea is to:
+
+1. Get the code (authorization code) after user verifies identity in conscent screen.
+2. Code thus obtained is passed to the rest api.
+3. Rest api does following steps:
+    3.1. Exchanges the authorization code for access and refresh token by hitting providers token exchange endpoint.
+    3.2. Get the user details from provider's user details api. 
+
+
+# Providers Endpoint Used:
+
+## 1. Facebook
+
+- [Facebook GrphAPI Explorer](https://developers.facebook.com/tools/explorer/)
+- [Getting Started with GraphAPI](https://developers.facebook.com/docs/graph-api/get-started/)
+
+
+**1.1. Oauth Conscent Screen:**
+In this phase, client (frontend) is presented with provider's conscent screen. On a callback respose, it receives an authorization code which is decoded, note that the autorization code needs to decoded.
+
+```js
+// Response
+{
+    "name": "",
+    "id": "",
+    "userID": "",
+    "expiresIn": 5888,
+    "accessToken": "",
+    "signedRequest": "",
+    "graphDomain": "facebook",
+    "data_access_expiration_time": 213123
+}
+
+// JWT decoded signedRequest: jwt_decode(signedRequest)
+{
+    "user_id": "",
+    "code": "",
+    "algorithm": "",
+    "issued_at": 1731763312
+}
+
+// Code thus obtained is the authorization code, which we'll use further.
+```
+
+**2. Token Endpoint**
+- This endpoint is used to exchange the authorization code for an access token.
+
+
+```python
+FACEBOOK_TOKEN_URL = "https://graph.facebook.com/v12.0/oauth/access_token"
+token_payload = {
+    "client_id": settings.FACEBOOK_APP_ID,
+    "client_secret": settings.FACEBOOK_APP_SECRET,
+    "redirect_uri": settings.FACEBOOK_REDIRECT_URI,
+    "code": code,
+}
+token_response = requests.get(FACEBOOK_TOKEN_URL, params=token_payload)
+```
+
+```sh
+GET: https://graph.facebook.com/v12.0/oauth/access_token?client_id=<client_id>&client_secret=<client_secret>&redirect_uri=<redirect_uri>&code=<authorization_code>
+
+Response:
+{
+	'access_token': '', 
+	'token_type': 'bearer', 
+	'expires_in': 4164
+}
+```
+
+
+**3. User Detail Endpoint:**
+
+```python
+        fields = "id,first_name,middle_name,last_name,email,picture"
+        userinfo_response = requests.get(
+            FACEBOOK_USERINFO_URL,
+            params={"access_token": access_token, "fields": fields}
+        )
+```
+
+With the access token, we can now obtain the user details:
+
+```js
+https://graph.facebook.com/me?access_token=<access_token>&fields=id%2Cfirst_name%2Cmiddle_name%2Clast_name%2Cemail%2Cpicture
+
+{
+	'id': '',
+	'first_name': '',
+	'last_name': '',
+	'email': '',
+	'picture': {
+		'data': {
+			'height': 50,
+			'is_silhouette': False,
+			'url': '',
+			'width': 50
+		}
+	}
+}
+```
+
+> Same response can be further used to validate the user login or create a user.
+
+## 2. Google
+
+- [Google Oauth Playground](https://developers.google.com/oauthplayground/)
+
+- [Using Oauth2.0](https://developers.google.com/identity/protocols/oauth2)
+
+**1. Oauth Conscent Screen:**
+
+In this phase, client (frontend) is presented with provider's conscent screen. On a callback respose, it receives an authorization code which is decoded, note that the autorization code needs to decoded.
+
+> Response
+
+```js
+{
+    "code": "",
+    "scope": "email profile openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+    "authuser": "0",
+    "prompt": "consent"
+}
+```
+
+**2. Token Endpoint:**
+
+We can uset the code, from the step 1 and construct the payload on the backend and send a post request to token url as follows:
+
+```python
+GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
+token_payload = {
+    "client_id": settings.GOOGLE_CLIENT_ID,
+    "client_secret": settings.GOOGLE_CLIENT_SECRET,
+    "code": code,
+    "grant_type": "authorization_code",
+    "redirect_uri": settings.GOOGLE_REDIRECT_URI,
+}
+token_response = requests.post(GOOGLE_TOKEN_URL, data=token_payload)
+```
+
+> Response
+```json
+{
+    'access_token': '', 
+    'expires_in': 3599,
+    'refresh_token': '',
+    'scope': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
+    'token_type': 'Bearer',
+    'id_token': ''
+}
+```
+
+This step yields us with, `access_token` and `id_token`, which we can use to fetch the user details.
+
+**Userinfo Endpoint:**
+
+```python
+GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
+
+userinfo_response = requests.get(
+    GOOGLE_USERINFO_URL,
+    headers={"Authorization": f"Bearer {access_token}"}
+)
+
+```
+
+> Response
+
+```js
+{
+    'sub': '',
+    'name': '',
+    'given_name': '',
+    'family_name': '',
+    'picture': '',
+    'email': '',
+    'email_verified': True
+}
+```

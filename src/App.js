@@ -39,9 +39,11 @@ function App() {
   const responseFacebook = async (response) => {
     if (response.status !== 'unknown') {
       try {
+        console.log("Facebook Oauth Conscent response:", response)
+
         const decode = jwtDecode(response.signedRequest)
+        console.log("Decoded Signed :", decode)
         // Handle login success
-        console.log('Facebook login success::', response);
   
         // Send the ID token to the Django backend for validation and login
         const authResp = await AuthService.facebookAuth(decode.code);
@@ -74,12 +76,13 @@ function App() {
           </button>
           <br/>
           <br/>
+          {/* params description: https://www.npmjs.com/package/@react-oauth/google#usegooglelogin-both-implicit--authorization-code-flow */}
           <FacebookLogin
             appId={FACEBOOK_APP_ID} // Replace with your Facebook App ID
             autoLoad={false} // Whether to automatically load the login dialog
-            fields=""
             callback={responseFacebook}
             icon="fa-facebook"
+            scope=''
             size='small'
             responseType='code'
           />
