@@ -39,7 +39,7 @@ function App() {
   const responseFacebook = async (response) => {
     if (response.status !== 'unknown') {
       try {
-        console.log("Facebook Oauth Conscent response:", response)
+        console.log("Facebook Oauth Consent response:", response)
 
         const decode = jwtDecode(response.signedRequest)
         console.log("Decoded Signed :", decode)

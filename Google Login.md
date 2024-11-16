@@ -103,7 +103,7 @@ Here, the authentication flow is **auth-code** so, the response is:
 }
 ```
 
-Now, we need to pass the code to the backend. With the code, backend with procede in following way:
+Now, we need to pass the code to the backend. With the code, backend with proceed in following way:
 
 - Step 1: Exchange authorization code for tokens
 

@@ -4,7 +4,7 @@
 
 Head over to: [Facebook Developer Portal](https://developers.facebook.com/apps/) and create a app.
 
-Get 2 things from your app:
+Get 3 things from your app:
 - App ID
 - App Secret
 - Redirect URI
@@ -75,7 +75,7 @@ Here, the response we get is:
 ```
 
 
-Now, we need to pass the code to the backend. With the code, backend with procede in following way:
+Now, we need to pass the code to the backend. With the code, backend with proceed in following way:
 
 - Step 1: Exchange authorization code for tokens
 

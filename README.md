@@ -13,7 +13,7 @@ This repo is an experiment to understand how social sign in works.
 
 Basically the idea is to:
 
-1. Get the code (authorization code) after user verifies identity in conscent screen.
+1. Get the code (authorization code) after user verifies identity in consent screen.
 2. Code thus obtained is passed to the rest api.
 3. Rest api does following steps:
     3.1. Exchanges the authorization code for access and refresh token by hitting providers token exchange endpoint.
@@ -21,16 +21,14 @@ Basically the idea is to:
     3.3. Create / authenticate user.
 
 
-# Providers Endpoint Used:
-
 ## 1. Facebook
 
-- [Facebook GrphAPI Explorer](https://developers.facebook.com/tools/explorer/)
+- [Facebook GraphAPI Explorer](https://developers.facebook.com/tools/explorer/)
 - [Getting Started with GraphAPI](https://developers.facebook.com/docs/graph-api/get-started/)
 
 
-### i. Oauth Conscent Screen:**
-In this phase, client (frontend) is presented with provider's conscent screen. On a callback respose, it receives an authorization code which is decoded, note that the autorization code needs to decoded.
+### i. Oauth Consent Screen:
+In this phase, client (frontend) is presented with provider's concent screen. On a callback response, it receives an authorization code which is decoded, note that the authorization code needs to decoded.
 
 ```js
 // Response
@@ -122,9 +120,9 @@ https://graph.facebook.com/me?access_token=<access_token>&fields=id%2Cfirst_name
 
 - [Using Oauth2.0](https://developers.google.com/identity/protocols/oauth2)
 
-### i. Oauth Conscent Screen:
+### i. Oauth Consent Screen:
 
-In this phase, client (frontend) is presented with provider's conscent screen. On a callback respose, it receives an authorization code which is decoded, note that the autorization code needs to decoded.
+In this phase, client (frontend) is presented with provider's consent screen. On a callback response, it receives an authorization code which is decoded, note that the authorization code needs to decoded.
 
 > Response
 
@@ -139,7 +137,7 @@ In this phase, client (frontend) is presented with provider's conscent screen. O
 
 ### ii. Token Endpoint:
 
-We can uset the code, from the step 1 and construct the payload on the backend and send a post request to token url as follows:
+We can use the code, from the step 1 and construct the payload on the backend and send a post request to token url as follows:
 
 ```python
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
