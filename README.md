@@ -1,4 +1,4 @@
-# React Social Sign In With DRF
+# React Oauth With DRF
 
 This repo is an experiment to understand how social sign in works.
 
