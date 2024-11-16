@@ -192,3 +192,17 @@ userinfo_response = requests.get(
     'email_verified': True
 }
 ```
+
+The way oauth works with a client side and server side is:
+
+- Client requests, authorization token from the Oauth server.
+
+- Oauth server responds with authorization token/code. Note that, authorization token is like a key to enter the main gate of a building (Oauth server).
+
+- Client passes the authorization code to server side.
+
+- Server side generates JWT access, refresh token to further access the resources. (JWT tokens are like a key to a particular room.)
+
+- A same jwt token is used to access other protected resources in Oauth Server.
+
+Here, **client** refers to frontend, or mobile application, and **server** refers to backend** and **Oauth Server** refers to providers like Google, Facebook etc.
